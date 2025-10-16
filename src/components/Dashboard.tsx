@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { LoginContextObj } from "../contexts/LoginContext";
 
 function Dashboard() {
   const [protectedData, setProtectedData] = useState("");
+  const { currentUser } = useContext(LoginContextObj);
 
   const getProtectedData = async () => {
     //get Token from localstorage
-    const token = localStorage.getItem("token");
+    // const token = localStorage.getItem("token");
     //make req to get the data
     const res = await fetch("http://localhost:3000/user-api/protected", {
       method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
+      credentials: "include",
     });
 
     if (res.status === 200) {
@@ -19,8 +21,12 @@ function Dashboard() {
     }
   };
 
+  console.log("user data on dashboard:", currentUser);
+
   return (
     <div>
+      <h1>Hi {currentUser?.name}</h1>
+
       <button className=" btn btn-success" onClick={getProtectedData}>
         Get Data
       </button>
